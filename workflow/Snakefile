@@ -1,0 +1,75 @@
+configfile: 'config/config.yaml'
+
+#tranches/pools
+tranche_names,pool_names,_,_ =glob_wildcards(config['in_folder'] + '{tranche}/Donor_Quantification/{pool}/{pool_two}.{donor}.h5ad')
+
+#process either by tranche or pool - for the time being we process by tranche and eventually split stats at pool level
+if config['by'] == 'tranche':
+
+    sample=list(set(tranche_names))
+
+elif config['by'] == 'pool':
+
+    sample=list(set(pool_names))
+
+else:
+
+    raise ValueError('by in config must be either tranche or pool')
+
+
+#load smk files
+include: 'rules/once.smk'
+include: 'rules/preprocess.smk'
+include: 'rules/merge.smk'
+include: 'rules/process.smk'
+include: 'rules/postprocess.smk'
+include: 'rules/reduce.smk'
+
+#define local rules
+localrules: prepare_mapping, geth5, filterh5, averagecd, averagelogcd
+
+
+#only build geno-pheno map
+rule buildmap:
+    input:
+        'resources/mapping/all.tsv'
+
+rule before_merge:
+    input:
+        expand(config['out_folder'] + 'preprocess/fofn/filtered/include/{sample}/h5.fofn',sample=sample)
+
+#normalization
+rule pflog1pf:
+    input:
+        expand(config['out_folder'] + 'process/pflog1pf/h5ad/{sample}/h5.h5ad',sample=sample)
+
+#post-normalization - prepare for limix pipeline
+rule aggregation:
+    input:
+        expand(config['out_folder'] + 'postprocess/aggregate/h5ad/{sample}/h5.h5ad', sample=sample),
+        directory(config['out_folder'] + 'postprocess/aggregate/results/split')
+
+#size reduction - just for pipelines requiring merged datasets to facilitate merging in the end
+#first rule allows reducing on any number of labels (X,raw,counts,log1p_cp10k)
+rule reduction:
+    input:
+        expand(config['out_folder'] + 'process/pflog1pf_reduced/h5ad/{sample}/h5.h5ad',sample=sample)
+
+
+rule reduction_X:
+    input:
+        expand(config['out_folder'] + 'process/pflog1pf_reduced_X/h5ad/{sample}/h5.h5ad',sample=sample)
+
+
+rule reduction_raw:
+    input:
+        expand(config['out_folder'] + 'process/pflog1pf_reduced_raw/h5ad/{sample}/h5.h5ad',sample=sample)
+
+
+rule reduction_counts:
+    input:
+        expand(config['out_folder'] + 'process/pflog1pf_reduced_counts/h5ad/{sample}/h5.h5ad',sample=sample)
+
+rule reduction_log1p_cp10k:
+    input:
+        expand(config['out_folder'] + 'process/pflog1pf_reduced_log1p_cp10k/h5ad/{sample}/h5.h5ad',sample=sample)

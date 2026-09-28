@@ -1,0 +1,43 @@
+# path or URL to sample sheet (TSV format, columns: sample, condition, ...)
+# samples: config/samples.tsv
+# we do not have this here
+
+#input-output folders
+in_folder: '/path/to/freeze/'
+out_folder: '/path/to/output/'
+
+#geno-pheno mapping
+reports: 'resources/reports.fofn'
+ukbb_samples: ''
+elgh_samples: ''
+
+#process at pool or tranche level. Tested with tranche for the time being.
+by: 'tranche'
+
+#path to a file with desired h5ad files - can be None or file. If None, include all h5ad in in_folder. 
+#keep: '/path/to/h5ad_to_keep.tsv'
+keep: None
+
+#take column/s from h5ad-matching report and add to h5ad file - can be None or comma separated column names with at least Pool_ID.Donor_Id. If None, only include a Pool_ID.Donor_Id (equivalent) derived from file path
+#add: 'Pool_ID.Donor_Id,Vacutainer ID'
+add: None
+
+#comma-separated column names to RETAIN from the original h5 object. If all, include all. Select otherwise
+#include_info: 'Azimuth:L0_predicted.celltype.l2' #this subset 
+include_info: 'all'
+
+#normalize on - can be None or a column (already present or added using the add key before). If None, do not normalize by column but use all the cells
+#norm: 'Azimuth:L0_predicted.celltype.l2'
+norm: None
+
+#retain only cells specified in list (Tranche_Pool_Donor_Cell, provided in a list) - can be None or file. If None, keep all the cells. If it has 2 column, add aggregation labels.
+#filter: '/path/to/cells_to_keep.txt'
+filter: None
+
+#final aggregation - if None, aggregate at donor level, aggregate at donor + comma-separated list of features otherwise
+#aggregate: None
+aggregate: 'azimuth.celltyp.l0'
+#aggregate: 'aggregation_label'
+
+#remove layers in normalized object but keep those lister here. This is a comma-separated list. Accepted are 'X','raw','counts','log1p_cp10k'. For instance, remove all but X and raw with 'X,raw'.
+reduce_to: 'X,raw'

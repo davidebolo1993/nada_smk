@@ -1,0 +1,76 @@
+__default__:
+
+  memory: 100
+  threads: 1
+  queue: '<small_queue>'
+  resources: "\"select[mem>100] rusage[mem=100] span[hosts=1]\""
+  output: "logs/out/{rule}-{wildcards}.out"
+  error: "logs/err/{rule}-{wildcards}.err"
+  jobname: "{rule}"
+  group: '<lsf_group>'
+
+mergeh5:
+
+  memory: 50000
+  threads: 8
+  queue: '<normal_queue>'
+  resources: "\"select[mem>50000] rusage[mem=50000] span[hosts=1]\""
+
+applylog1pf:
+
+  memory: 35000
+  queue: '<normal_queue>'
+  resources: "\"select[mem>35000] rusage[mem=35000] span[hosts=1]\""
+
+applypflog1pf:
+
+  memory: 35000
+  queue: '<normal_queue>'
+  resources: "\"select[mem>35000] rusage[mem=35000] span[hosts=1]\""
+
+aggregate:
+
+  memory: 15000
+  queue: '<normal_queue>'
+  resources: "\"select[mem>15000] rusage[mem=15000] span[hosts=1]\""
+
+
+final_aggregate:
+
+  memory: 35000
+  queue: '<normal_queue>'
+  threads: 3
+  resources: "\"select[mem>35000] rusage[mem=35000] span[hosts=1]\""
+
+reduce_size:
+
+  memory: 35000
+  queue: '<normal_queue>'
+  resources: "\"select[mem>35000] rusage[mem=35000] span[hosts=1]\""
+
+reduce_size_to_X:
+
+  memory: 35000
+  queue: '<normal_queue>'
+  resources: "\"select[mem>35000] rusage[mem=35000] span[hosts=1]\""
+
+
+reduce_size_to_raw:
+
+  memory: 35000
+  queue: '<normal_queue>'
+  resources: "\"select[mem>35000] rusage[mem=35000] span[hosts=1]\""
+
+
+reduce_size_to_counts:
+
+  memory: 35000
+  queue: '<normal_queue>'
+  resources: "\"select[mem>35000] rusage[mem=35000] span[hosts=1]\""
+
+
+reduce_size_to_log1p_cp10k:
+
+  memory: 35000
+  queue: '<normal_queue>'
+  resources: "\"select[mem>35000] rusage[mem=35000] span[hosts=1]\""
